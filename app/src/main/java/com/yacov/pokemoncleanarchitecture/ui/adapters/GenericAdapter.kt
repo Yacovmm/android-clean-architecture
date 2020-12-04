@@ -13,15 +13,15 @@ class GenericAdapter<T>(
     private val diffCallBack: DiffUtil.ItemCallback<T>
 ) : RecyclerView.Adapter<BaseCell>() {
 
-    class AdapterHolderType(var resId:Int, var clazz: Class<out BaseCell>, var reuseIdentifier:Int)
+    class AdapterHolderType(var resId: Int, var clazz: Class<out BaseCell>, var reuseIdentifier: Int)
     interface GenericRecylerAdapterDelegate {
-        fun cellForPosition(adapter: GenericAdapter<*>, cell:RecyclerView.ViewHolder, position:Int)
-        fun cellType(adapter: GenericAdapter<*>, position: Int):AdapterHolderType?  {return null}
-        fun didSelectItemAt(adapter:GenericAdapter<*>, index:Int) {}
-        fun numberOfRows(adapter:GenericAdapter<*>):Int? { return null}
+        fun cellForPosition(adapter: GenericAdapter<*>, cell: RecyclerView.ViewHolder, position: Int)
+        fun cellType(adapter: GenericAdapter<*>, position: Int): AdapterHolderType? { return null }
+        fun didSelectItemAt(adapter: GenericAdapter<*>, index: Int) {}
+        fun numberOfRows(adapter: GenericAdapter<*>): Int? { return null }
     }
 
-    var delegate:GenericRecylerAdapterDelegate? = null
+    var delegate: GenericRecylerAdapterDelegate? = null
 
     private var cellTypes = arrayListOf<AdapterHolderType>()
 
@@ -32,10 +32,12 @@ class GenericAdapter<T>(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseCell {
         cellTypes.find {
             it.reuseIdentifier == viewType
-        }?.let {model ->
+        }?.let { model ->
             return model.clazz.getDeclaredConstructor(View::class.java)
-                .newInstance(LayoutInflater.from(parent.context)
-                    .inflate(model.resId, parent, false))
+                .newInstance(
+                    LayoutInflater.from(parent.context)
+                        .inflate(model.resId, parent, false)
+                )
         }
 
         return BaseCell(LayoutInflater.from(parent.context).inflate(R.layout.pokemon_item_cell, parent, false))
@@ -46,7 +48,7 @@ class GenericAdapter<T>(
 
     override fun getItemViewType(position: Int): Int {
         delegate?.let { delegate ->
-            delegate.cellType(this, position)?.let {type ->
+            delegate.cellType(this, position)?.let { type ->
                 cellTypes.add(type)
                 return type.reuseIdentifier
             }
@@ -58,9 +60,8 @@ class GenericAdapter<T>(
         cell.prepareForReuse()
         delegate?.cellForPosition(adapter = this, cell = cell, position = position)
 
-        cell.onClick = {index ->
+        cell.onClick = { index ->
             delegate?.didSelectItemAt(adapter = this, index = index)
         }
     }
-
 }
