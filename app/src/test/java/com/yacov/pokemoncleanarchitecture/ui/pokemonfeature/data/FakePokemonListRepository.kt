@@ -25,7 +25,6 @@ class FakePokemonListRepository : IPokemonListRepository {
         if (!shouldReturnNetworkError) {
             return ResponseWrapper.Success(pokemonList)
         }
-        return ResponseWrapper.Error("Error")
+        return ResponseWrapper.Error("Network error")
     }
-
 }

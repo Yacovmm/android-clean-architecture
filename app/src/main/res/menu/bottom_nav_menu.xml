@@ -6,7 +6,7 @@
         android:title="Lista" />
 
     <item
-        android:id="@+id/myPokemonFragment"
+        android:id="@+id/pokemonSavedListFragment"
         android:title="Meus Pokemons"/>
 
     <item

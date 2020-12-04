@@ -3,7 +3,6 @@ package com.yacov.pokemoncleanarchitecture
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.yacov.pokemoncleanarchitecture.databinding.ActivityMainBinding
@@ -19,6 +18,5 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.bottomNav.setupWithNavController((nav_host_fragment.findNavController()))
-
     }
 }

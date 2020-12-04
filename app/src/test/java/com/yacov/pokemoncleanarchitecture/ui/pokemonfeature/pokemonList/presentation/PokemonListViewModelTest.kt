@@ -5,10 +5,8 @@ import com.androiddevs.shoppinglisttestingyt.MainCoroutineRule
 import com.androiddevs.shoppinglisttestingyt.getOrAwaitValueTest
 import com.google.common.truth.Truth.assertThat
 import com.yacov.pokemoncleanarchitecture.ui.pokemonfeature.data.FakePokemonListRepository
-import com.yacov.pokemoncleanarchitecture.ui.pokemonfeature.pokemonList.domain.entities.PokemonModelEntity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
-
 import org.junit.Rule
 import org.junit.Test
 
@@ -54,6 +52,4 @@ class PokemonListViewModelTest {
         assertThat(items.data!![0].name).isEqualTo("Zekrom")
         assertThat(items.data!!.last().name).isEqualTo("Abomasnow")
     }
-
-
 }

@@ -6,5 +6,4 @@ import com.yacov.pokemoncleanarchitecture.ui.pokemonfeature.pokemonList.domain.e
 interface IPokemonListRepository {
 
     suspend fun getPokemons(): ResponseWrapper<List<PokemonModelEntity>>
-
 }

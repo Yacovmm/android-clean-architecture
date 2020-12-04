@@ -10,6 +10,7 @@ import javax.inject.Inject
 class PokemonApiHelperImpl @Inject constructor(
     private val apiService: IPokemonRetrofitApiService
 ) : IPokemonApiHelper {
+
     override suspend fun getPokemon(limit: String): ResponseWrapper<List<PokemonModelEntity>> {
         return handleGetPokemon(apiService.getPokemonList(limit))
     }
@@ -20,7 +21,7 @@ class PokemonApiHelperImpl @Inject constructor(
                 response.body()?.let { result ->
                     (result as PokemonRemoteResponse).also {
                         val entities = PokemonModelEntity.mapper(it)
-                        return ResponseWrapper.Success(entities , response.code() )
+                        return ResponseWrapper.Success(entities, response.code())
                     }
                 }
             }

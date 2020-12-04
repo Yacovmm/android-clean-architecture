@@ -9,10 +9,11 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.applicationpokemon.core.extension.toggleVisibility
-import com.example.applicationpokemon.core.utils.Resource
+import com.example.applicationpokemon.core.utils.ViewState
 import com.google.android.material.snackbar.Snackbar
 import com.yacov.pokemoncleanarchitecture.databinding.PokemonListFragmentBinding
 import com.yacov.pokemoncleanarchitecture.ui.adapters.GenericAdapter
@@ -45,18 +46,19 @@ class PokemonListFragment : Fragment(), GenericAdapter.GenericRecylerAdapterDele
         setupObservers()
 
         setupSpinner()
-
     }
 
     private fun setupSpinner() {
-        val adapter = ArrayAdapter(requireContext(),
+        val adapter = ArrayAdapter(
+            requireContext(),
             R.layout.simple_dropdown_item_1line,
-            listOf("", "A-Z", "Z-A"))
+            listOf("", "A-Z", "Z-A")
+        )
         binding?.filterSpinner?.adapter = adapter
         binding?.filterSpinner?.onItemSelectedListener = filterSpinnerListener
     }
 
-    val filterSpinnerListener = object : AdapterView.OnItemSelectedListener{
+    private val filterSpinnerListener = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, pos: Int, id: Long) {
             viewModel.orderBySpinner(pos)
         }
@@ -65,15 +67,16 @@ class PokemonListFragment : Fragment(), GenericAdapter.GenericRecylerAdapterDele
     }
 
     private fun setupObservers() {
-        viewModel._pokemonListLiveData.observe(viewLifecycleOwner) { resource ->
-            when(resource) {
-                is Resource.Error -> {
-                    Snackbar.make(requireView(), resource.message!!, Snackbar.LENGTH_SHORT)
+        viewModel._pokemonListLiveData.observe(viewLifecycleOwner) { viewState ->
+            when (viewState) {
+                is ViewState.Error -> {
+                    Snackbar.make(requireView(), viewState.message!!, Snackbar.LENGTH_SHORT)
                 }
-                is Resource.Success -> {
-                    resource.data?.let { viewModel.adapter?.submitList(it) }
+                is ViewState.Success -> {
+                    binding?.paginationProgressBar?.toggleVisibility(false)
+                    viewState.data?.let { viewModel.adapter?.submitList(it) }
                 }
-                is Resource.Loading -> {
+                is ViewState.Loading -> {
                     binding?.paginationProgressBar?.toggleVisibility(true)
                 }
             }
@@ -102,6 +105,15 @@ class PokemonListFragment : Fragment(), GenericAdapter.GenericRecylerAdapterDele
         (cell as PokemonItemCell).apply {
             this.set(adapter.differ.currentList[position] as PokemonModelEntity)
         }
+    }
+
+    override fun didSelectItemAt(adapter: GenericAdapter<*>, index: Int) {
+        super.didSelectItemAt(adapter, index)
+        findNavController().navigate(
+            PokemonListFragmentDirections.actionPokemonListFragmentToPokemonDetailsFragment(
+                pokemon = adapter.differ.currentList[index] as PokemonModelEntity
+            )
+        )
     }
 
     override fun cellType(

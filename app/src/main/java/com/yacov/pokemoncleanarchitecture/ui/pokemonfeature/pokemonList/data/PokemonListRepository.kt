@@ -12,5 +12,4 @@ class PokemonListRepository @Inject constructor(
 
     override suspend fun getPokemons(): ResponseWrapper<List<PokemonModelEntity>> =
         apiHelperImpl.getPokemon()
-
 }
